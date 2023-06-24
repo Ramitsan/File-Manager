@@ -31,21 +31,21 @@ const commands = {
   },  
   
   rn: (params) => {
-    const pathToFile = params.split(' ')[0];
-    const newFilename = params.split(' ')[1];
+    const pathToFile = params[0];
+    const newFilename = params[1];
     renameFile(pathToFile, newFilename);
   },
 
   cp: (params) => {
-    const pathToFile = params.split(' ')[0];
-    const pathToNewDirectory = params.split(' ')[1];
+    const pathToFile = params[0];
+    const pathToNewDirectory = params[1];
 
     copyFile(pathToFile, pathToNewDirectory);
   },
 
   mv: (params) => {
-    const pathToFile = params.split(' ')[0];
-    const pathToNewDirectory = params.split(' ')[1];
+    const pathToFile = params[0];
+    const pathToNewDirectory = params[1];
 
     moveFile(pathToFile, pathToNewDirectory);
   },
@@ -75,14 +75,8 @@ const splitParams = (params) => {
   return result;
 }
 
-console.log(splitParams('xfojgfidpj'));
-console.log(splitParams('xfoj gfidpj'));
-console.log(splitParams('\'xfoj\' \'gfidpj\''));
-console.log(splitParams('\'xf oj\' \'gfi dpj\''));
-
 process.stdin.on('data', (data) => {
   console.log(data.toString().split(/[ \n\r]/));
-  // const commandList = data.toString().split(/[ \n\r]/).filter(it => it);
   const commandList = splitParams(data.toString()).filter(it => it);
 
 
@@ -105,5 +99,3 @@ process.on('SIGINT', () => {
   console.log('close');
   process.exit();
 })
-
-// console.log(process.env);
