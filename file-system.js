@@ -7,7 +7,6 @@ const __dirname = path.dirname(__filename);
 
 let currentDir = process.env['HOME'];
 
-
 const cd = (cdPath) => {
   currentDir = path.resolve(currentDir, cdPath);
   console.log(currentDir, cdPath);
@@ -20,7 +19,8 @@ const ls = async () => {
 
 // Read file and print it's content in console (should be done using Readable stream)
 const readAndPrintFile = (filePath) => {
-  const readStream = fs.createReadStream(filePath, 'utf-8');
+  const resolvedFilePath = path.resolve(currentDir, filePath);
+  const readStream = fs.createReadStream(resolvedFilePath, 'utf-8');
   let data = '';
   readStream.on('data', chunk => process.stdout.write(data += chunk));
 }
@@ -29,18 +29,24 @@ const readAndPrintFile = (filePath) => {
 const createEmptyFile = (newFileName) => {
   // The w flag ensures that the file is created if does not already exist. 
   // If the file already exists, fs.open() overwrites it and removes all its content.
-  fs.promises.open(newFileName, 'w');  
+  const resolvedNewFileName = path.resolve(currentDir, newFileName);
+  fs.promises.open(resolvedNewFileName, 'w');  
 }
 
 // Rename file (content should remain unchanged)
 const renameFile = (pathToFile, newFilename) => {
-  fs.promises.rename(pathToFile, newFilename);
+  const resolvedPathToFile = path.resolve(currentDir, pathToFile);
+  const resolvedNewFilename = path.resolve(currentDir, newFilename);
+  fs.promises.rename(resolvedPathToFile, resolvedNewFilename);
 }
 
 // Copy file (should be done using Readable and Writable streams)
 const copyFile = (pathToFile, pathToNewDirectory) => {
-  const readStream = fs.createReadStream(pathToFile, 'utf8');
-  const writeStream = fs.createWriteStream(pathToNewDirectory);
+  const resolvedPathToFile = path.resolve(currentDir, pathToFile);
+  const resolvedPathToNewDirectory = path.resolve(currentDir, pathToNewDirectory);
+
+  const readStream = fs.createReadStream(resolvedPathToFile, 'utf8');
+  const writeStream = fs.createWriteStream(resolvedPathToNewDirectory);
 
   readStream.on('data', (chunk) => {
     writeStream.write(chunk);
@@ -49,11 +55,14 @@ const copyFile = (pathToFile, pathToNewDirectory) => {
 
 //Move file (same as copy but initial file is deleted, copying part should be done using Readable and Writable streams)
 const moveFile = (pathToFile, pathToNewDirectory) => {
-  const readStream = fs.createReadStream(pathToFile);
-  const writeStream = fs.createWriteStream(pathToNewDirectory);
+  const resolvedPathToFile = path.resolve(currentDir, pathToFile);
+  const resolvedPathToNewDirectory = path.resolve(currentDir, pathToNewDirectory);
+
+  const readStream = fs.createReadStream(resolvedPathToFile);
+  const writeStream = fs.createWriteStream(resolvedPathToNewDirectory);
 
   readStream.on('close', () => {
-    fs.promises.unlink(pathToFile);    
+    fs.promises.unlink(resolvedPathToFile);    
   });
 
   readStream.pipe(writeStream);
@@ -61,7 +70,8 @@ const moveFile = (pathToFile, pathToNewDirectory) => {
 
 // Delete file
 const deleteFile = (pathToFile) => {
-  fs.promises.unlink(pathToFile);
+  const resolvedPathToFile = path.resolve(currentDir, pathToFile);
+  fs.promises.unlink(resolvedPathToFile);
 }
 
 export { cd, ls, readAndPrintFile, createEmptyFile, renameFile, copyFile, moveFile, deleteFile };
