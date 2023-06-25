@@ -15,46 +15,78 @@ const args = parseArgs();
 const username = args['--username'];
 console.log(username);
 
+const checkParams = (params, length) => {
+  if(params.length !== length) { 
+    console.log('Invalid input');
+    return false;
+  } 
+  return true;
+}
+
 const commands = {
-  cd: (params) => {
+  cd: async (params) => {
+    if(!checkParams(params, 1)) {
+      return;
+    };
     const cdPath = params[0];
-    cd(cdPath);
+    await cd(cdPath);
   },
 
-  ls: (params) => {
-    ls();
+  ls: async (params) => {
+    if(!checkParams(params, 0)) {
+      return;
+    };
+    await ls();
   }, 
 
-  cat: (params) => {
-    readAndPrintFile(params[0]);    
+  cat: async (params) => {
+    if(!checkParams(params, 1)) {
+      return;
+    };
+    await readAndPrintFile(params[0]);    
   },
 
-  add: (params) => {
-    createEmptyFile(params[0]);    
+  add: async (params) => {
+    if(!checkParams(params, 1)) {
+      return;
+    };
+    await createEmptyFile(params[0]);    
   },  
   
-  rn: (params) => {
+  rn: async (params) => {
+    if(!checkParams(params, 2)) {
+      return;
+    };
     const pathToFile = params[0];
     const newFilename = params[1];
-    renameFile(pathToFile, newFilename);
+    await renameFile(pathToFile, newFilename);
   },
 
-  cp: (params) => {
+  cp: async (params) => {
+    if(!checkParams(params, 2)) {
+      return;
+    };
     const pathToFile = params[0];
     const pathToNewDirectory = params[1];
 
-    copyFile(pathToFile, pathToNewDirectory);
+    await copyFile(pathToFile, pathToNewDirectory);
   },
 
-  mv: (params) => {
+  mv: async (params) => {
+    if(!checkParams(params, 2)) {
+      return;
+    };
     const pathToFile = params[0];
     const pathToNewDirectory = params[1];
 
-    moveFile(pathToFile, pathToNewDirectory);
+    await moveFile(pathToFile, pathToNewDirectory);
   },
 
-  rm: (params) => {
-    deleteFile(params[0]);
+  rm: async (params) => {
+    if(!checkParams(params, 1)) {
+      return;
+    };
+    await deleteFile(params[0]);
   }
 }
 
@@ -78,7 +110,7 @@ const splitParams = (params) => {
   return result;
 }
 
-process.stdin.on('data', (data) => {
+process.stdin.on('data', async (data) => {
   console.log(data.toString().split(/[ \n\r]/));
   const commandList = splitParams(data.toString()).filter(it => it);
 
@@ -90,12 +122,17 @@ process.stdin.on('data', (data) => {
 
   const commandHandler = commands[command];
   if (commandHandler) {
-    commandHandler(params);
+    try {
+      await commandHandler(params);
+    } 
+    catch(err) {
+      console.log('Operation failed');
+    }
+    
   } else {
-    console.log('unknown command')
+    console.log('Invalid input')
   }
 });
-
 
 process.on('SIGINT', () => {
   console.log('close', username);
