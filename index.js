@@ -12,22 +12,25 @@ const parseArgs = () => {
 };
 
 const args = parseArgs();
-console.log(args);
+const username = args['--username'];
+console.log(username);
+
 const commands = {
   cd: (params) => {
     const cdPath = params[0];
     cd(cdPath);
   },
+
   ls: (params) => {
     ls();
   }, 
 
   cat: (params) => {
-    readAndPrintFile(params);    
+    readAndPrintFile(params[0]);    
   },
 
   add: (params) => {
-    createEmptyFile(params);    
+    createEmptyFile(params[0]);    
   },  
   
   rn: (params) => {
@@ -51,7 +54,7 @@ const commands = {
   },
 
   rm: (params) => {
-    deleteFile(params);
+    deleteFile(params[0]);
   }
 }
 
@@ -79,7 +82,6 @@ process.stdin.on('data', (data) => {
   console.log(data.toString().split(/[ \n\r]/));
   const commandList = splitParams(data.toString()).filter(it => it);
 
-
   const command = commandList[0];
   const params = commandList.slice(1);
 
@@ -96,6 +98,6 @@ process.stdin.on('data', (data) => {
 
 
 process.on('SIGINT', () => {
-  console.log('close');
+  console.log('close', username);
   process.exit();
 })

@@ -13,8 +13,20 @@ const cd = (cdPath) => {
 }
 
 const ls = async () => {
-  const dir = await fs.promises.readdir(currentDir);
+  const dir = await fs.promises.readdir(currentDir, {withFileTypes: true});
   console.log(dir);
+  console.table(dir.map(it => ({
+    name: it.name,
+    type: it.isDirectory() ? 'directory' : 'file' 
+  })).sort((a, b) => {
+    if(a.type > b.type) {
+      return 1;
+    } else if (a.type < b.type) {
+      return -1;
+    } else {
+      return (a.name > b.name) * 2 - 1
+    }
+  }));
 }
 
 // Read file and print it's content in console (should be done using Readable stream)
