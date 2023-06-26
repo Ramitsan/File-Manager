@@ -7,7 +7,7 @@ const cd = async (cdPath) => {
   const nextDir = path.resolve(currentDir, cdPath);
   await fs.promises.readdir(nextDir);
   currentDir = nextDir;
-  console.log(currentDir, cdPath);
+  // console.log(currentDir, cdPath);
   console.log('You are currently in:', currentDir);
 }
 
@@ -29,4 +29,4 @@ const ls = async () => {
 
 }
 
-export { cd, ls };
+export { currentDir, cd, ls };

@@ -1,5 +1,6 @@
 import { readAndPrintFile, createEmptyFile, renameFile, copyFile, moveFile, deleteFile } from './file-system.js';
 import {cd, ls} from './navigation.js';
+import { calculateHash } from './hash-calculation.js';
 
 const parseArgs = () => {
   const args = {};
@@ -90,6 +91,13 @@ const commands = {
       return;
     };
     await deleteFile(params[0]);
+  },
+
+  hash: async (params) => {
+    if(!checkParams(params, 1)) {
+      return;
+    };
+    await calculateHash(params[0]);
   },
 
   '.exit': async () => {
