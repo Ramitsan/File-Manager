@@ -44,6 +44,13 @@ const commands = {
     await cd(cdPath);
   },
 
+  up: async (params) => {
+    if(!checkParams(params, 0)) {
+      return;
+    };
+    await cd('..');
+  },
+
   ls: async (params) => {
     if(!checkParams(params, 0)) {
       return;
@@ -127,7 +134,6 @@ const commands = {
 
     await decompress(archivePath, filePath);
   },
-
 
   '.exit': async () => {
     console.log(finalMessage);

@@ -6,8 +6,6 @@ const cd = async (cdPath) => {
   const nextDir = path.resolve(currentDir.value, cdPath);
   await fs.promises.readdir(nextDir);
   currentDir.value = nextDir;
-  // console.log(currentDir.value, cdPath);
-  // console.log('You are currently in:', currentDir.value);
 }
 
 const ls = async () => {
