@@ -10,7 +10,7 @@ const cd = async (cdPath) => {
 
 const ls = async () => {
   const dir = await fs.promises.readdir(currentDir.value, {withFileTypes: true});
-  console.log(dir);
+  // console.log(dir);
   console.table(dir.map(it => ({
     name: it.name,
     type: it.isDirectory() ? 'directory' : 'file' 

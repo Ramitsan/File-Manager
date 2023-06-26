@@ -3,6 +3,7 @@ import {cd, ls} from './navigation.js';
 import { calculateHash } from './hash-calculation.js';
 import { compress, decompress } from './compress-and-decompress.js';
 import { currentDir } from './current-dir.js';
+import { _os } from './operating-system.js';
 
 const parseArgs = () => {
   const args = {};
@@ -106,6 +107,13 @@ const commands = {
       return;
     };
     await deleteFile(params[0]);
+  },
+
+  os: async (params) => {
+    if(!checkParams(params, 1)) {
+      return;
+    };
+    await _os(params[0]);
   },
 
   hash: async (params) => {
