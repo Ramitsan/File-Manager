@@ -1,6 +1,7 @@
 import { readAndPrintFile, createEmptyFile, renameFile, copyFile, moveFile, deleteFile } from './file-system.js';
 import {cd, ls} from './navigation.js';
 import { calculateHash } from './hash-calculation.js';
+import { compress, decompress } from './compress-and-decompress.js';
 
 const parseArgs = () => {
   const args = {};
@@ -99,6 +100,27 @@ const commands = {
     };
     await calculateHash(params[0]);
   },
+
+  compress: async (params) => {
+    if(!checkParams(params, 2)) {
+      return;
+    };
+    const filePath = params[0];
+    const archivePath = params[1];
+
+    await compress(filePath, archivePath);
+  },
+
+  decompress: async (params) => {
+    if(!checkParams(params, 2)) {
+      return;
+    };
+    const archivePath = params[0];
+    const filePath = params[1];  
+
+    await decompress(archivePath, filePath);
+  },
+
 
   '.exit': async () => {
     console.log(finalMessage);
