@@ -1,18 +1,17 @@
 import fs from 'fs';
 import path from 'path';
-
-let currentDir = process.env['HOME'];
+import { currentDir } from './current-dir.js';
 
 const cd = async (cdPath) => {
-  const nextDir = path.resolve(currentDir, cdPath);
+  const nextDir = path.resolve(currentDir.value, cdPath);
   await fs.promises.readdir(nextDir);
-  currentDir = nextDir;
-  // console.log(currentDir, cdPath);
-  console.log('You are currently in:', currentDir);
+  currentDir.value = nextDir;
+  // console.log(currentDir.value, cdPath);
+  // console.log('You are currently in:', currentDir.value);
 }
 
 const ls = async () => {
-  const dir = await fs.promises.readdir(currentDir, {withFileTypes: true});
+  const dir = await fs.promises.readdir(currentDir.value, {withFileTypes: true});
   console.log(dir);
   console.table(dir.map(it => ({
     name: it.name,
@@ -29,4 +28,4 @@ const ls = async () => {
 
 }
 
-export { currentDir, cd, ls };
+export { cd, ls };

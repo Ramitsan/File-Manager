@@ -2,6 +2,7 @@ import { readAndPrintFile, createEmptyFile, renameFile, copyFile, moveFile, dele
 import {cd, ls} from './navigation.js';
 import { calculateHash } from './hash-calculation.js';
 import { compress, decompress } from './compress-and-decompress.js';
+import { currentDir } from './current-dir.js';
 
 const parseArgs = () => {
   const args = {};
@@ -19,6 +20,12 @@ const username = args['--username'];
 const startMessage = `Welcome to the File Manager, ${username}!`;
 const finalMessage = `Thank you for using File Manager, ${username}, goodbye!`
 console.log(startMessage);
+
+const showCurrentDir = () => {
+   console.log('You are currently in:', currentDir.value);
+}
+
+showCurrentDir();
 
 const checkParams = (params, length) => {
   if(params.length !== length) { 
@@ -166,9 +173,13 @@ process.stdin.on('data', async (data) => {
     catch(err) {
       console.log('Operation failed');
     }
+    finally {
+      showCurrentDir();
+    }
     
   } else {
-    console.log('Invalid input')
+    console.log('Invalid input');
+    showCurrentDir();
   }  
 });
 
