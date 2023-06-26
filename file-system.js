@@ -20,7 +20,14 @@ const createEmptyFile = async (newFileName) => {
   // The w flag ensures that the file is created if does not already exist. 
   // If the file already exists, fs.open() overwrites it and removes all its content.
   const resolvedNewFileName = path.resolve(currentDir.value, newFileName);
-  return fs.promises.open(resolvedNewFileName, 'w');  
+  let result;
+  try {
+    result = await fs.promises.open(resolvedNewFileName, 'w'); 
+  }  
+  finally {
+    await result?.close();
+  }
+  return result;
 }
 
 // Rename file (content should remain unchanged)
