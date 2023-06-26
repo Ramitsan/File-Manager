@@ -1,36 +1,5 @@
 import fs from 'fs';
-
 import path from 'path';
-import { fileURLToPath } from 'url';
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-let currentDir = process.env['HOME'];
-
-const cd = async (cdPath) => {
-  const nextDir = path.resolve(currentDir, cdPath);
-  await fs.promises.readdir(nextDir);
-  currentDir = nextDir;
-  console.log(currentDir, cdPath);
-}
-
-const ls = async () => {
-  const dir = await fs.promises.readdir(currentDir, {withFileTypes: true});
-  console.log(dir);
-  console.table(dir.map(it => ({
-    name: it.name,
-    type: it.isDirectory() ? 'directory' : 'file' 
-  })).sort((a, b) => {
-    if(a.type > b.type) {
-      return 1;
-    } else if (a.type < b.type) {
-      return -1;
-    } else {
-      return (a.name > b.name) * 2 - 1
-    }
-  }));
-
-}
 
 // Read file and print it's content in console (should be done using Readable stream)
 const readAndPrintFile = async (filePath) => {
@@ -98,6 +67,7 @@ const moveFile = async (pathToFile, pathToNewDirectory) => {
       });
     
       readStream.pipe(writeStream);
+
       readStream.on('error', (err) => {rej(err)});
       readStream.on('end', () => {res()});
       writeStream.on('error', (err) => {rej(err)});
@@ -114,4 +84,4 @@ const deleteFile = async (pathToFile) => {
   return fs.promises.unlink(resolvedPathToFile);
 }
 
-export { cd, ls, readAndPrintFile, createEmptyFile, renameFile, copyFile, moveFile, deleteFile };
+export { readAndPrintFile, createEmptyFile, renameFile, copyFile, moveFile, deleteFile };

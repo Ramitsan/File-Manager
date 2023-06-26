@@ -1,4 +1,5 @@
-import { cd, ls, readAndPrintFile, createEmptyFile, renameFile, copyFile, moveFile, deleteFile } from './file-system.js';
+import { readAndPrintFile, createEmptyFile, renameFile, copyFile, moveFile, deleteFile } from './file-system.js';
+import {cd, ls} from './navigation.js';
 
 const parseArgs = () => {
   const args = {};
@@ -13,7 +14,9 @@ const parseArgs = () => {
 
 const args = parseArgs();
 const username = args['--username'];
-console.log(username);
+const startMessage = `Welcome to the File Manager, ${username}!`;
+const finalMessage = `Thank you for using File Manager, ${username}, goodbye!`
+console.log(startMessage);
 
 const checkParams = (params, length) => {
   if(params.length !== length) { 
@@ -87,6 +90,11 @@ const commands = {
       return;
     };
     await deleteFile(params[0]);
+  },
+
+  '.exit': async () => {
+    console.log(finalMessage);
+    process.exit();
   }
 }
 
@@ -111,7 +119,7 @@ const splitParams = (params) => {
 }
 
 process.stdin.on('data', async (data) => {
-  console.log(data.toString().split(/[ \n\r]/));
+  // console.log(data.toString().split(/[ \n\r]/));
   const commandList = splitParams(data.toString()).filter(it => it);
 
   const command = commandList[0];
@@ -131,10 +139,10 @@ process.stdin.on('data', async (data) => {
     
   } else {
     console.log('Invalid input')
-  }
+  }  
 });
 
 process.on('SIGINT', () => {
-  console.log('close', username);
+  console.log(finalMessage);
   process.exit();
 })
