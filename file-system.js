@@ -42,7 +42,9 @@ const copyFile = async (pathToFile, pathToNewDirectory) => {
   return new Promise ((res, rej) => {
     try {
       const resolvedPathToFile = path.resolve(currentDir.value, pathToFile);
-      const resolvedPathToNewDirectory = path.resolve(currentDir.value, pathToNewDirectory);
+      const pathToFileSplit = pathToFile.split(/[\\/]/);
+      const fileName = pathToFileSplit[pathToFileSplit.length - 1];
+      const resolvedPathToNewDirectory = path.resolve(currentDir.value, pathToNewDirectory, fileName);
     
       const readStream = fs.createReadStream(resolvedPathToFile, 'utf8');
       const writeStream = fs.createWriteStream(resolvedPathToNewDirectory);
@@ -65,7 +67,9 @@ const moveFile = async (pathToFile, pathToNewDirectory) => {
   return new Promise ((res, rej) => {
     try {
       const resolvedPathToFile = path.resolve(currentDir.value, pathToFile);
-      const resolvedPathToNewDirectory = path.resolve(currentDir.value, pathToNewDirectory);
+      const pathToFileSplit = pathToFile.split(/[\\/]/);
+      const fileName = pathToFileSplit[pathToFileSplit.length - 1];
+      const resolvedPathToNewDirectory = path.resolve(currentDir.value, pathToNewDirectory, fileName);
     
       const readStream = fs.createReadStream(resolvedPathToFile);
       const writeStream = fs.createWriteStream(resolvedPathToNewDirectory);
