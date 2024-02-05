@@ -2,10 +2,17 @@ import os from 'os';
 
 const osCommands = {
   '--EOL': () => {
-    return os.EOL;
+    return `EOL: ${JSON.stringify(os.EOL)}`;
   },
   '--cpus': () => {
-    return os.cpus();
+    const cpusAmount = `Overall amount: ${os.cpus().length}${os.EOL}`;
+    const cpusData = os.cpus().map((item) => {
+        const model = item.model; 
+        const speed = item.speed / 1000 + 'GHz';
+      return `${model} ${speed}`;
+    }).join(os.EOL);  
+
+    return  `${cpusAmount}${cpusData}`;
   },
   '--homedir': () => {
     return os.homedir();
